@@ -1,0 +1,23 @@
+{
+  "name": "seedledger",
+  "version": "0.0.0",
+  "description": "Personal financial app",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "noop"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "fastify-cli": "^7.4.1"
+  },
+  "workspaces": [
+    "services/transactions",
+    "packages/contracts"
+  ]
+}
