@@ -10,7 +10,7 @@ Functional requirements (what the system does) are documented separately in `doc
 - **Monorepo layout:**
   - `apps/web` – Next.js web application (App Router) for the UI.
   - `services/transactions` – Backend service for transaction management.
-  - `packages/shared` – Shared code (types, Zod schemas, tRPC router types/utilities).
+  - `packages/contracts` – Contracts package with shared Zod schemas and DTO types that are safe to use at runtime in both backend and frontend.
 - **Service boundaries:**
   - `services/transactions` exposes a tRPC API for transaction operations.
   - `apps/web` consumes this tRPC API via a type-safe tRPC client and uses server-side rendering (SSR) features to act as a middleware layer between end users and the transaction service.
@@ -24,7 +24,7 @@ Functional requirements (what the system does) are documented separately in `doc
 - **API layer:** tRPC only.
   - One `appRouter` composed of feature routers (v0: `transactionsRouter`).
 - **Validation & types:** Zod.
-  - Zod schemas defined in `packages/shared` for inputs/outputs.
+  - Zod schemas defined in `packages/contracts` for inputs/outputs.
   - Types inferred via `z.infer` and re-used in both backend and frontend.
   - Public schemas expose monetary fields (e.g. `amount`, `incomeTotal`, `expenseTotal`, `balance`) as decimal strings, mapped from integer minor-unit storage in the database.
   - In v0, `userId` and `currency` are not accepted as client inputs; the transaction service always sets `userId = "default"` and `currency = "HUF"` internally.
@@ -39,15 +39,15 @@ Functional requirements (what the system does) are documented separately in `doc
 ## 4. Web App: `apps/web`
 
 - **Framework:** Next.js (TypeScript, App Router).
-- **API consumption:** tRPC client generated from the shared `AppRouter` type.
+- **API consumption:** tRPC client typed with the backend’s `TransactionsRouter` type.
 - **Responsibilities:**
   - Provide UI for logging income and expenses.
   - Display transaction lists and basic summaries.
-  - Rely on shared Zod schemas and types for end-to-end type safety.
+  - Rely on contracts (Zod schemas and DTO types) from `packages/contracts` for end-to-end type safety and consistent validation.
 
-## 5. Shared Package: `packages/shared`
+## 5. Contracts Package: `packages/contracts`
 
-- **Purpose:** Provide a single source of truth for cross-cutting types and schemas.
+- **Purpose:** Provide a single source of truth for cross-cutting API contracts (Zod schemas and DTO types) that are safe to import and execute at runtime in both backend and frontend code.
 - **Contents (v0):**
   - Zod schemas for domain entities and DTOs, e.g.:
     - `TransactionSchema`.
@@ -56,14 +56,13 @@ Functional requirements (what the system does) are documented separately in `doc
     - `SummaryInputSchema` / `SummaryResultSchema`.
     - `DeleteTransactionInputSchema`.
   - Types inferred from these schemas via `z.infer`.
-  - tRPC router types (e.g. `AppRouter`) exported for use in `apps/web`.
 - **Consumers:**
   - `services/transactions` for validation and domain typing.
-  - `apps/web` for typed tRPC hooks and shared domain models.
+  - `apps/web` for client-side validation.
 
 ## 6. tRPC API Surface (Conceptual)
 
-All procedures are validated with Zod and derived types are shared through `packages/shared`.
+All procedures are validated with Zod and derived types are shared as contracts through `packages/contracts`.
 
 - **Namespace:** `transactions` (v0)
   - `transactions.create`
@@ -98,7 +97,7 @@ All procedures are validated with Zod and derived types are shared through `pack
   - tRPC procedures (API surface).
   - Domain/services (business logic).
   - DB layer (Drizzle + SQLite).
-  - Shared schemas/types (in `packages/shared`).
+  - Contracts package (schemas/types in `packages/contracts`).
 - Provide and maintain:
   - Clear procedure contracts (inputs/outputs) that frontend can rely on.
   - Simple contribution notes for a medior colleague.
