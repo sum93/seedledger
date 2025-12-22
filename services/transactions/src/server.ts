@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename)
 
 // Create server instance
 const server = fastify({
+  logger: true,
   routerOptions: {
     maxParamLength: 5000,
   },
@@ -38,10 +39,9 @@ server.register(AutoLoad, {
   forceESM: true
 });
 
-// TODO: Enable Logger
 (async () => {
   try {
-    await server.listen({ port: 3000 });
+    await server.listen({ port: 3003 });
   } catch (err) {
     server.log.error(err);
     process.exit(1);

@@ -10,14 +10,15 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "noop"
+    "dev": "concurrently --names \"Web,Transactions\" --prefix-colors \"green,cyan\" \"npm run dev -w apps/web\" \"npm run dev -w services/transactions\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
     "fastify-cli": "^7.4.1"
   },
   "workspaces": [
-    "services/transactions",
-    "packages/contracts"
+    "apps/web",
+    "packages/contracts",
+    "services/transactions"
   ]
 }
