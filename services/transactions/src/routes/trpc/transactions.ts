@@ -4,13 +4,13 @@ import { fastifyTRPCPlugin, FastifyTRPCPluginOptions } from '@trpc/server/adapte
 import { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin'
 
-import { transactionSchema } from 'contracts'
+import { validationSchema, dbSchema } from 'contracts'
 
 export default fp(async function (fastify: FastifyInstance, opts: any) {
   fastify.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
     trpcOptions: {
-      router: transactionsRouter,
+      router: createTransactionsRouter(fastify.db),
       onError({ path, error }) {
         // report to error monitoring
         console.error(`Error in tRPC handler on path '${path}':`, error);
@@ -19,21 +19,18 @@ export default fp(async function (fastify: FastifyInstance, opts: any) {
   })
 })
 
-const transactions = [{
-    amount: 100,
-    type: 'expense'
-}]
-
 const t = initTRPC.create()
-const transactionsRouter = t.router({
-  getTransactions: t.procedure.query(() => {
-    return transactions
-  }),
+const createTransactionsRouter = (db: FastifyInstance['db']) => t.router({
+  getTransactions: t.procedure.query(
+    opts => {
+      return db.select().from(dbSchema.transactionSchema);
+    }
+  ),
   addTransaction: t.procedure
-    .input(transactionSchema)
+    .input(validationSchema.transactionInsertSchema)
     .mutation(opts => {
         console.log(opts.input.amount, opts.input.type)
     }),
 })
 
-export type TransactionsRouter = typeof transactionsRouter
+export type TransactionsRouter = ReturnType<typeof createTransactionsRouter>

@@ -1,23 +1,50 @@
-# Getting Started with [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# Transactions Service
 
-## Available Scripts
+The transactions service is a Fastify-based HTTP API that handles
+transaction data for SeedLedger. It stores data in a local SQLite database
+using `better-sqlite3` and Drizzle ORM, and shares its schema/validation
+with the `packages/contracts` workspace.
 
-In the project directory, you can run:
+## Running the service
 
-### `npm run dev`
+In normal development, this service is started from the monorepo root via:
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+npm run dev
+```
 
-### `npm start`
+See the root `README.md` for details about the overall dev setup.
 
-For production mode
+## Configuration
 
-### `npm run test`
+### Environment variables
 
-Run the test cases.
+| Name                   | Default             | Purpose                                        |
+| ---------------------- | ------------------- | ---------------------------------------------- |
+| `TRANSACTIONS_DB_FILE` | `db/transactions.db` | Path to the SQLite database file for this service. |
 
-## Learn More
+`TRANSACTIONS_DB_FILE` controls where the SQLite DB file is created. If it is
+not set, the service falls back to `db/transactions.db` under
+`services/transactions/db/` and creates the parent directory if needed.
 
-To learn Fastify, check out the [Fastify documentation](https://fastify.dev/docs/latest/).
+The same path is also used by `drizzle.config.ts` so schema-aware tools connect
+to the same database file.
+
+## Database
+
+- Uses SQLite via `better-sqlite3`.
+- The database file path is taken from `TRANSACTIONS_DB_FILE` or defaults to
+  `db/transactions.db` under this workspace.
+- The service ensures the parent directory for the database file exists on
+  startup.
+- Table definitions are defined in the shared `contracts` package and
+  re-exported via `src/db/schema.ts`.
+
+## Testing
+
+Dedicated tests for this service are not set up yet.
+
+## Learn more
+
+- Fastify: https://fastify.dev/docs/latest/
+- Drizzle ORM: https://orm.drizzle.team/docs
