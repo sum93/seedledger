@@ -3,20 +3,28 @@ import fastify from 'fastify';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create server instance
 const server = fastify({
-  logger: true,
+  logger: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        translateTime: 'HH:MM:ss Z',
+        ignore: 'pid,hostname',
+      },
+    },
+  },
   routerOptions: {
     maxParamLength: 5000,
   },
 });
 
 // Options
-export type AppOptions = {} & Partial<AutoloadPluginOptions>
-const options: AppOptions = {}
+export type AppOptions = {} & Partial<AutoloadPluginOptions>;
+const options: AppOptions = {};
 
 // Do not touch the following lines
 
@@ -27,7 +35,7 @@ const options: AppOptions = {}
 server.register(AutoLoad, {
   dir: path.join(__dirname, 'plugins'),
   options: options,
-  forceESM: true
+  forceESM: true,
 });
 
 // This loads all plugins defined in routes
@@ -36,7 +44,7 @@ server.register(AutoLoad, {
 server.register(AutoLoad, {
   dir: path.join(__dirname, 'routes'),
   options: options,
-  forceESM: true
+  forceESM: true,
 });
 
 (async () => {

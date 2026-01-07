@@ -19,16 +19,69 @@ See the root `README.md` for details about the overall dev setup.
 
 ### Environment variables
 
-| Name                   | Default             | Purpose                                        |
-| ---------------------- | ------------------- | ---------------------------------------------- |
+| Name                   | Default              | Purpose                                        |
+| ---------------------- | -------------------- | ---------------------------------------------- |
 | `TRANSACTIONS_DB_FILE` | `db/transactions.db` | Path to the SQLite database file for this service. |
 
-`TRANSACTIONS_DB_FILE` controls where the SQLite DB file is created. If it is
-not set, the service falls back to `db/transactions.db` under
+`TRANSACTIONS_DB_FILE` controls where the SQLite DB file is created. In local
+development you can set it in a `.env` file inside
+`services/transactions/`, for example:
+
+```env
+TRANSACTIONS_DB_FILE=db/transactions.dev.db
+```
+
+If it is not set, the service falls back to `db/transactions.db` under
 `services/transactions/db/` and creates the parent directory if needed.
 
 The same path is also used by `drizzle.config.ts` so schema-aware tools connect
 to the same database file.
+
+### Database setup for local development
+
+1. From the monorepo root, install dependencies if you haven't already:
+
+   ```bash
+   npm install
+   ```
+
+2. Change into this service directory:
+
+   ```bash
+   cd services/transactions
+   ```
+
+3. Create a `.env` file in this directory by copying the `.env.example`
+
+4. Generate migrations from the Drizzle schema (only needed when schemas change):
+
+   ```bash
+   npm run db:generate
+   ```
+
+5. Apply migrations to create or update the SQLite database file:
+
+   ```bash
+   npm run db:migrate
+   ```
+
+6. Seed the database with sample data using `drizzle-seed`:
+
+   ```bash
+   npm run db:seed
+   ```
+
+To reset the database to an empty state but keep the schema, you can run:
+
+```bash
+npm run db:reset
+```
+
+or it could be reseed with:
+
+```bash
+npm run db:seed
+```
 
 ## Database
 

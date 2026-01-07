@@ -13,14 +13,9 @@ const __dirname = path.dirname(__filename)
 
 export interface DbPluginOptions {}
 
-export default fp<DbPluginOptions>(async (fastify, _opts) => {
-  const dbFileEnv = process.env.TRANSACTIONS_DB_FILE;
-
-  const transactionDb = dbFileEnv
-    ? path.isAbsolute(dbFileEnv)
-      ? dbFileEnv
-      : path.join(__dirname, '..', '..', dbFileEnv)
-    : path.join(__dirname, '..', '..', 'db', 'transactions.db');
+export default fp<DbPluginOptions>(async (fastify) => {
+  const dbFileEnv = fastify.config.TRANSACTIONS_DB_FILE!;
+  const transactionDb = path.join(__dirname, '..', '..', dbFileEnv);
 
   const transactionDbDir = path.dirname(transactionDb);
 
@@ -28,14 +23,14 @@ export default fp<DbPluginOptions>(async (fastify, _opts) => {
     fs.mkdirSync(transactionDbDir, { recursive: true });
   }
 
-  const sqlite = new Database(transactionDb);
+  const sqlite = new Database(transactionDb, { fileMustExist: true });
   const db = drizzle({ client: sqlite, schema: dbSchema });
 
   fastify.decorate('db', db);
   fastify.addHook('onClose', async () => {
     sqlite.close();
   });
-});
+}, { dependencies: ['env-plugin'] });
 
 declare module 'fastify' {
   export interface FastifyInstance {

@@ -66,3 +66,7 @@ dist
 
 # environment variables
 .env
+
+# drizzle (dev-only mode)
+drizzle
+db/transactions.db
