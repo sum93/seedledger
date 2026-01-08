@@ -27,3 +27,26 @@ This runs three processes in parallel via `concurrently`:
 Because the `contracts` package is watch-built, changes to shared schemas and
 validation logic are automatically reflected in the running services without
 needing a manual build.
+
+## Development Environment
+
+- Recommended editor: VS Code
+- Install extensions:
+  - ESLint (by Microsoft)
+  - Prettier  Code formatter (by Prettier)
+- Optional project settings in `.vscode/settings.json`:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
+```
+
+Prettier formats code on save, ESLint surfaces issues in the editor and runs on
+staged files via pre-commit hooks (Husky + lint-staged)
+
+This repo targets Node 24 (see `.nvmrc`).

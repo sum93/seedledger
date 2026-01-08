@@ -10,11 +10,20 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run watch -w packages/contracts\" \"npm run dev -w services/transactions\" \"npm run dev -w apps/web\""
+    "dev": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run watch -w packages/contracts\" \"npm run dev -w services/transactions\" \"npm run dev -w apps/web\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint:fix -w apps/web",
+      "npm run prettier:fix -w apps/web"
+    ]
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
-    "fastify-cli": "^7.4.1"
+    "fastify-cli": "^7.4.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   },
   "workspaces": [
     "apps/web",
