@@ -18,6 +18,10 @@
       "npm run lint:fix -w apps/web",
       "npm run prettier:fix -w apps/web"
     ],
+    "packages/contracts/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint:fix -w packages/contracts",
+      "npm run prettier:fix -w packages/contracts"
+    ],
     "services/transactions/**/*.{js,jsx,ts,tsx}": [
       "npm run lint:fix -w services/transactions",
       "npm run prettier:fix -w services/transactions"
