@@ -1,39 +1,40 @@
-import Database from 'better-sqlite3';
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import fp from 'fastify-plugin';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import Database from "better-sqlite3";
+import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import fp from "fastify-plugin";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-import { dbSchema } from 'contracts';
+import { dbSchema } from "contracts";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export interface DbPluginOptions {}
+export default fp(
+  async (fastify) => {
+    const dbFileEnv = fastify.config.TRANSACTIONS_DB_FILE!;
+    const transactionDb = path.join(__dirname, "..", "..", dbFileEnv);
 
-export default fp<DbPluginOptions>(async (fastify) => {
-  const dbFileEnv = fastify.config.TRANSACTIONS_DB_FILE!;
-  const transactionDb = path.join(__dirname, '..', '..', dbFileEnv);
+    const transactionDbDir = path.dirname(transactionDb);
 
-  const transactionDbDir = path.dirname(transactionDb);
+    if (!fs.existsSync(transactionDbDir)) {
+      fs.mkdirSync(transactionDbDir, { recursive: true });
+    }
 
-  if (!fs.existsSync(transactionDbDir)) {
-    fs.mkdirSync(transactionDbDir, { recursive: true });
-  }
+    const sqlite = new Database(transactionDb, { fileMustExist: true });
+    const db = drizzle({ client: sqlite, schema: dbSchema });
 
-  const sqlite = new Database(transactionDb, { fileMustExist: true });
-  const db = drizzle({ client: sqlite, schema: dbSchema });
+    fastify.decorate("db", db);
+    fastify.addHook("onClose", async () => {
+      sqlite.close();
+    });
+  },
+  { dependencies: ["env-plugin"] },
+);
 
-  fastify.decorate('db', db);
-  fastify.addHook('onClose', async () => {
-    sqlite.close();
-  });
-}, { dependencies: ['env-plugin'] });
-
-declare module 'fastify' {
+declare module "fastify" {
   export interface FastifyInstance {
     db: BetterSQLite3Database<typeof dbSchema>;
   }
-};
+}

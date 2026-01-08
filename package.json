@@ -17,6 +17,10 @@
     "apps/web/**/*.{js,jsx,ts,tsx}": [
       "npm run lint:fix -w apps/web",
       "npm run prettier:fix -w apps/web"
+    ],
+    "services/transactions/**/*.{js,jsx,ts,tsx}": [
+      "npm run lint:fix -w services/transactions",
+      "npm run prettier:fix -w services/transactions"
     ]
   },
   "devDependencies": {

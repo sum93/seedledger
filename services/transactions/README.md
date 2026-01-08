@@ -19,8 +19,8 @@ See the root `README.md` for details about the overall dev setup.
 
 ### Environment variables
 
-| Name                   | Default              | Purpose                                        |
-| ---------------------- | -------------------- | ---------------------------------------------- |
+| Name                   | Default              | Purpose                                            |
+| ---------------------- | -------------------- | -------------------------------------------------- |
 | `TRANSACTIONS_DB_FILE` | `db/transactions.db` | Path to the SQLite database file for this service. |
 
 `TRANSACTIONS_DB_FILE` controls where the SQLite DB file is created. In local
