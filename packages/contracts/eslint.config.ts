@@ -10,7 +10,7 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: {
-      globals: globals.node,
+      globals: { ...globals.browser, ...globals.node },
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
       },
@@ -18,5 +18,5 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   eslintConfigPrettierFlat,
-  globalIgnores(["dist/**", "drizzle/**"]),
+  globalIgnores(["dist/**"]),
 ]);
