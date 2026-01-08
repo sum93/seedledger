@@ -68,5 +68,5 @@ dist
 .env
 
 # drizzle (dev-only mode)
-drizzle
+drizzle/
 db/transactions.db

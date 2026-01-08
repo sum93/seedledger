@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "concurrently --names \"Web,Transactions,Contracts\" --prefix-colors \"green,cyan,magenta\" \"npm run dev -w apps/web\" \"npm run dev -w services/transactions\" \"npm run watch -w packages/contracts\""
+    "dev": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run watch -w packages/contracts\" \"npm run dev -w services/transactions\" \"npm run dev -w apps/web\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
