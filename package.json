@@ -11,6 +11,10 @@
   },
   "scripts": {
     "dev": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run watch -w packages/contracts\" \"npm run dev -w services/transactions\" \"npm run dev -w apps/web\"",
+    "lint": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run lint -w packages/contracts\" \"npm run lint -w services/transactions\" \"npm run lint -w apps/web\"",
+    "prettier": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run prettier -w packages/contracts\" \"npm run prettier -w services/transactions\" \"npm run prettier -w apps/web\"",
+    "prettier:fix": "concurrently --names \"Contracts,Transactions,Web\" --prefix-colors \"magenta,cyan,green\" \"npm run prettier:fix -w packages/contracts\" \"npm run prettier:fix -w services/transactions\" \"npm run prettier:fix -w apps/web\"",
+    "test": "echo \"No tests defined yet\" && exit 0",
     "prepare": "husky"
   },
   "lint-staged": {
