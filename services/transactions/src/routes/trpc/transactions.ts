@@ -1,14 +1,14 @@
 import { initTRPC } from "@trpc/server";
 import {
   fastifyTRPCPlugin,
-  FastifyTRPCPluginOptions,
+  type FastifyTRPCPluginOptions,
 } from "@trpc/server/adapters/fastify";
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 
-import { validationSchema, dbSchema } from "contracts";
+import { dbSchema, validationSchema } from "contracts";
 
-export default fp(async function (fastify: FastifyInstance) {
+export default fp(async function (fastify) {
   fastify.register(fastifyTRPCPlugin, {
     prefix: "/trpc",
     trpcOptions: {

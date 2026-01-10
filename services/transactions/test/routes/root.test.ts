@@ -1,12 +1,13 @@
-import { test } from "node:test";
-import * as assert from "node:assert";
+import { expect, test } from "vitest";
+
 import { build } from "../helper.js";
 
-test("default root route", async (t) => {
-  const app = await build(t);
+test("default root route", async () => {
+  const app = build();
 
   const res = await app.inject({
     url: "/",
   });
-  assert.deepStrictEqual(JSON.parse(res.payload), { root: true });
+
+  expect(JSON.parse(res.payload)).toEqual({ root: true });
 });

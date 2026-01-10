@@ -1,57 +1,27 @@
-import AutoLoad, { AutoloadPluginOptions } from "@fastify/autoload";
-import fastify from "fastify";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Create server instance
-const server = fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
-  routerOptions: {
-    maxParamLength: 5000,
-  },
-});
-
-// Options
-export type AppOptions = {} & Partial<AutoloadPluginOptions>;
-const options: AppOptions = {};
-
-// Do not touch the following lines
-
-// This loads all plugins defined in plugins
-// those should be support plugins that are reused
-// through your application
-
-server.register(AutoLoad, {
-  dir: path.join(__dirname, "plugins"),
-  options: options,
-  forceESM: true,
-});
-
-// This loads all plugins defined in routes
-// define your routes in one of these
-
-server.register(AutoLoad, {
-  dir: path.join(__dirname, "routes"),
-  options: options,
-  forceESM: true,
-});
+import { build, autoLoad } from "./app.js";
 
 (async () => {
+  const app = build({
+    logger: {
+      transport: {
+        target: "pino-pretty",
+        options: {
+          translateTime: "HH:MM:ss Z",
+          ignore: "pid,hostname",
+        },
+      },
+    },
+    routerOptions: {
+      maxParamLength: 5000,
+    },
+  });
+
+  autoLoad(app);
+
   try {
-    await server.listen({ port: 3003 });
+    await app.listen({ port: 3003 });
   } catch (err) {
-    server.log.error(err);
+    app.log.error(err);
     process.exit(1);
   }
 })();
