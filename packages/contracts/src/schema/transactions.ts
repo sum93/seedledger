@@ -6,4 +6,7 @@ export const transactionSchema = sqliteTable("transactions", {
     .primaryKey(),
   type: text({ mode: "text" }).notNull(),
   amount: integer().notNull(),
+  date: integer({ mode: "timestamp" }).notNull(),
+  description: text({ mode: "text" }),
+  category: text({ mode: "text" }),
 });

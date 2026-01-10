@@ -17,6 +17,19 @@ export async function seedDb() {
         id: f.uuid(),
         amount: f.int({ minValue: 500, maxValue: 50000 }),
         type: f.valuesFromArray({ values: ["credit", "debit"] }),
+        date: f.date({ minDate: new Date(2020, 0, 1), maxDate: new Date() }),
+        description: f.loremIpsum(),
+        category: f.valuesFromArray({
+          values: [
+            "groceries",
+            "utilities",
+            "entertainment",
+            "transportation",
+            "healthcare",
+            "education",
+            "dining",
+          ],
+        }),
       },
     },
   }));
