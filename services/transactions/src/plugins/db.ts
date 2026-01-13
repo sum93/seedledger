@@ -13,7 +13,12 @@ const __dirname = path.dirname(__filename);
 
 export default fp(
   async (fastify) => {
-    const dbFileEnv = fastify.config.TRANSACTIONS_DB_FILE!;
+    let dbFileEnv = fastify.config.TRANSACTIONS_DB_FILE!;
+    // Might be read from fastify config
+    if (typeof process !== "undefined" && !!process.env?.VITEST) {
+      dbFileEnv = fastify.config.TRANSACTIONS_TEST_DB_FILE!;
+    }
+
     const transactionDb = path.join(__dirname, "..", "..", dbFileEnv);
 
     const transactionDbDir = path.dirname(transactionDb);

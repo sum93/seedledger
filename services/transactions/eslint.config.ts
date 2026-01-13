@@ -19,4 +19,10 @@ export default defineConfig([
   tseslint.configs.recommended,
   eslintConfigPrettierFlat,
   globalIgnores(["dist/**", "drizzle/**"]),
+  {
+    files: ["test/**/*.ts"],
+    rules: {
+      "no-empty-pattern": ["error", { allowObjectPatternsAsParameters: true }],
+    },
+  },
 ]);

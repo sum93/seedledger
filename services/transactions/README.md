@@ -95,7 +95,23 @@ npm run db:seed
 
 ## Testing
 
-Dedicated tests for this service are not set up yet.
+This service uses Vitest for tests. Because the tests exercise a shared
+SQLite database file, `fileParallelism` is disabled in `vite.config.ts`
+to avoid concurrent writes to the same DB file:
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  test: {
+    setupFiles: ["./test/setup.ts"],
+    fileParallelism: false,
+  },
+});
+```
+
+If you change the test database strategy (for example, by using a
+separate SQLite file per worker or per test file), you may be able to
+re-enable `fileParallelism` safely.
 
 ## Learn more
 

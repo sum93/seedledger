@@ -1,11 +1,15 @@
-import { autoLoad, build as buildApp } from "../src/app.js";
+import type { FastifyInstance } from "fastify";
+import { test as baseTest } from "vitest";
 
-// Automatically build and tear down our instance
-export function build() {
-  const app = buildApp();
+import { autoLoad, build } from "../src/app.js";
 
-  autoLoad(app);
-  // t.after(() => void app.close());
+export const test = baseTest.extend<{ app: FastifyInstance }>({
+  app: async ({}, use) => {
+    const app = build();
+    autoLoad(app);
 
-  return app;
-}
+    await use(app);
+
+    await app.close();
+  },
+});

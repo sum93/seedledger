@@ -1,10 +1,8 @@
-import { expect, test } from "vitest";
+import { expect } from "vitest";
 
-import { build } from "../helper.js";
+import { test } from "../helper.js";
 
-test("default root route", async () => {
-  const app = build();
-
+test("default root route", async ({ app }) => {
   const res = await app.inject({
     url: "/",
   });

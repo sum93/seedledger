@@ -9,6 +9,10 @@ const schema = {
       type: "string",
       default: "db/transactions.db",
     },
+    TRANSACTIONS_TEST_DB_FILE: {
+      type: "string",
+      default: "db/transactions.test.db",
+    },
   },
 };
 
@@ -27,6 +31,7 @@ declare module "fastify" {
   export interface FastifyInstance {
     config: {
       TRANSACTIONS_DB_FILE: string;
+      TRANSACTIONS_TEST_DB_FILE: string;
     };
   }
 }

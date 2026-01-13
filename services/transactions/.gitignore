@@ -70,3 +70,4 @@ dist
 # drizzle (dev-only mode)
 drizzle/
 db/transactions.db
+db/transactions.test.db

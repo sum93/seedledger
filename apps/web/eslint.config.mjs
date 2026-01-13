@@ -16,6 +16,12 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    parserOptions: {
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
 ]);
 
 export default eslintConfig;
