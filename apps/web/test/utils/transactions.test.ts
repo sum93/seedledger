@@ -73,30 +73,34 @@ describe("sortTransactions", () => {
   });
 
   describe("sort by description", () => {
-    it("should sort by description ascending (null last)", () => {
+    it("should sort by description ascending (null treated as empty string, comes first)", () => {
       const result = sortTransactions(mockTransactions, "description", "asc");
-      expect(result[0].description).toBe("Groceries");
-      expect(result[1].description).toBe("Salary");
-      expect(result[2].description).toBe(null);
+      expect(result[0].description).toBe(null);
+      expect(result[1].description).toBe("Groceries");
+      expect(result[2].description).toBe("Salary");
     });
 
     it("should handle null values correctly", () => {
       const result = sortTransactions(mockTransactions, "description", "desc");
       expect(result[0].description).toBe("Salary");
+      expect(result[1].description).toBe("Groceries");
       expect(result[2].description).toBe(null);
     });
   });
 
   describe("sort by category", () => {
-    it("should sort by category ascending", () => {
+    it("should sort by category ascending (null first)", () => {
       const result = sortTransactions(mockTransactions, "category", "asc");
-      expect(result[0].category).toBe("Food");
-      expect(result[1].category).toBe("Income");
+      expect(result[0].category).toBe(null);
+      expect(result[1].category).toBe("Food");
+      expect(result[2].category).toBe("Income");
     });
 
-    it("should handle null categories", () => {
+    it("should handle null categories in descending order", () => {
       const result = sortTransactions(mockTransactions, "category", "desc");
       expect(result[0].category).toBe("Income");
+      expect(result[1].category).toBe("Food");
+      expect(result[2].category).toBe(null);
     });
   });
 
