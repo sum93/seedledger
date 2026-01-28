@@ -15,7 +15,7 @@ export function formatAmount(
   const formatted = new Intl.NumberFormat(DEFAULT_LOCALE, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount / 100);
+  }).format(amount);
 
   if (!type) return formatted;
 
