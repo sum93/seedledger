@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SortDownIcon, SortUpIcon, UnsortedIcon } from "./icons";
 import { sortTransactions } from "../../utils/transactions";
+import { formatAmount, formatDate } from "../../utils/formatting";
 
 type Transaction = {
   id: string;
@@ -76,21 +77,6 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     sortField,
     sortOrder,
   );
-
-  const formatDate = (date: string | Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }).format(new Date(date));
-  };
-
-  const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount / 100);
-  };
 
   return (
     <div className="w-full overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-800">
