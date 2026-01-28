@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SortDownIcon, SortUpIcon, UnsortedIcon } from "./icons";
 import { sortTransactions } from "../../utils/transactions";
 import { formatAmount, formatDate } from "../../utils/formatting";
+import { DEFAULT_CURRENCY } from "../../utils/constants";
 
 type Transaction = {
   id: string;
@@ -114,7 +115,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
               onClick={() => handleSort("amount")}
             >
               <div className="flex items-center gap-2">
-                Amount
+                Amount ({DEFAULT_CURRENCY})
                 <SortIcon
                   field="amount"
                   sortField={sortField}
@@ -167,12 +168,11 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                       : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
                   }`}
                 >
-                  {transaction.type === "inflow" ? "+" : "-"}
                   {transaction.type === "inflow" ? "Inflow" : "Outflow"}
                 </span>
               </td>
               <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">
-                {formatAmount(transaction.amount)}
+                {formatAmount(transaction.amount, transaction.type)}
               </td>
               <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                 {transaction.category || "—"}
