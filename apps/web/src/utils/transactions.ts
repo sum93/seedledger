@@ -1,14 +1,4 @@
-type Transaction = {
-  id: string;
-  type: "inflow" | "outflow";
-  amount: number;
-  date: string | Date;
-  description: string | null;
-  category: string | null;
-};
-
-type SortField = "type" | "amount" | "date" | "description" | "category";
-type SortOrder = "asc" | "desc";
+import { SortField, SortOrder, Transaction } from "@/types/transaction";
 
 export function sortTransactions(
   transactions: Transaction[],
