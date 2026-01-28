@@ -8,6 +8,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./test/setup.ts"],
+    coverage: {
+      exclude: ["node_modules/**", "**/*config.ts", "**/icons.tsx"],
+    },
   },
   resolve: {
     alias: {
