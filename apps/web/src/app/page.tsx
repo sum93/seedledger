@@ -3,6 +3,7 @@
 import { trpc } from "@/utils/trpc";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { TransactionsTable } from "./components/TransactionsTable";
 
 export default function Home() {
   const transactionsQuery = useQuery(trpc.getTransactions.queryOptions());
@@ -41,20 +42,11 @@ export default function Home() {
           </p>
         </div>
         {transactionsQuery.isFetched && (
-          <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-            <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-              API Example
-            </h1>
-            <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-              {transactionsQuery.data
-                ? transactionsQuery.data
-                    .map(
-                      ({ type, amount }) =>
-                        `${type === "inflow" ? "+" : "-"}${amount}`,
-                    )
-                    .join(", ")
-                : "No data"}
-            </p>
+          <div className="w-full">
+            <h2 className="mb-4 text-2xl font-semibold text-black dark:text-zinc-50">
+              Transactions
+            </h2>
+            <TransactionsTable transactions={transactionsQuery.data} />
           </div>
         )}
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
