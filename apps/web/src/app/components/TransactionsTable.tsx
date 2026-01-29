@@ -73,7 +73,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
           onItemsPerPageChange={handleItemsPerPageChange}
         />
       )}
-      <table className="w-full text-left text-sm">
+      <table className="w-full text-left text-sm border-b border-zinc-200 dark:border-zinc-800">
         <TableHeader
           sortField={sortField}
           sortOrder={sortOrder}

@@ -42,8 +42,8 @@ export function TableHeader({
   const headerClass =
     "cursor-pointer px-4 py-3 font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800";
 
-  const headers: { field: SortField; label: string }[] = [
-    { field: "date", label: "Date" },
+  const headers: { field: SortField; label: string; width?: string }[] = [
+    { field: "date", label: "Date", width: "w-36" },
     { field: "type", label: "Type" },
     { field: "amount", label: `Amount (${DEFAULT_CURRENCY})` },
     { field: "category", label: "Category" },
@@ -53,8 +53,12 @@ export function TableHeader({
   return (
     <thead className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
       <tr>
-        {headers.map(({ field, label }) => (
-          <th key={field} className={headerClass} onClick={() => onSort(field)}>
+        {headers.map(({ field, label, width }) => (
+          <th
+            key={field}
+            className={`${headerClass} ${width || ""}`}
+            onClick={() => onSort(field)}
+          >
             <div className="flex items-center gap-2">
               {label}
               <SortIcon
