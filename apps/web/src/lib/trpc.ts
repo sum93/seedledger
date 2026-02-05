@@ -7,7 +7,7 @@ import type { TransactionsRouter } from "transactions/types";
 export const queryClient = new QueryClient();
 
 const trpcClient = createTRPCClient<TransactionsRouter>({
-  links: [httpBatchLink({ url: "/transactions" })],
+  links: [httpBatchLink({ url: "/api/transactions" })],
 });
 
 export const trpc = createTRPCOptionsProxy<TransactionsRouter>({

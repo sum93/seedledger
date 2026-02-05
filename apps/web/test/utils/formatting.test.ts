@@ -1,4 +1,4 @@
-import { formatAmount, formatDate } from "../../src/utils/formatting";
+import { formatAmount, formatDate } from "../../src/lib/formatting";
 
 describe("formatDate", () => {
   it("should format Date object correctly", () => {

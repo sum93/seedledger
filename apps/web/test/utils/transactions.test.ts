@@ -1,4 +1,4 @@
-import { sortTransactions } from "../../src/utils/transactions";
+import { sortTransactions } from "../../src/lib/transactions";
 
 const mockTransactions = [
   {

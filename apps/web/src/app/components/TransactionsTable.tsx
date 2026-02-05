@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { SortDownIcon, SortUpIcon, UnsortedIcon } from "./icons";
-import { sortTransactions } from "../../utils/transactions";
-import { formatAmount, formatDate } from "../../utils/formatting";
-import { DEFAULT_CURRENCY } from "../../utils/constants";
+import { sortTransactions } from "../../lib/transactions";
+import { formatAmount, formatDate } from "../../lib/formatting";
+import { DEFAULT_CURRENCY } from "../../lib/constants";
 
 type Transaction = {
   id: string;

@@ -1,9 +1,10 @@
 "use client";
 
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { TransactionsTable } from "./components/TransactionsTable";
+import Link from "next/link";
+import { TransactionsTable } from "../components/TransactionsTable";
 
 export default function Home() {
   const transactionsQuery = useQuery(trpc.getTransactions.queryOptions());
@@ -43,9 +44,17 @@ export default function Home() {
         </div>
         {transactionsQuery.isFetched && (
           <div className="w-full">
-            <h2 className="mb-4 text-2xl font-semibold text-black dark:text-zinc-50">
-              Transactions
-            </h2>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-black dark:text-zinc-50">
+                Transactions
+              </h2>
+              <Link
+                href="/transactions/new"
+                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              >
+                Add Transaction
+              </Link>
+            </div>
             <TransactionsTable transactions={transactionsQuery.data} />
           </div>
         )}
