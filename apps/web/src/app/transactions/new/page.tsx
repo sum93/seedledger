@@ -18,7 +18,7 @@ export default function NewTransactionPage() {
   const addTransactionMutation = useMutation(
     trpc.addTransaction.mutationOptions({
       onSuccess: () => {
-        router.push("/");
+        router.push("/transactions");
       },
     }),
   );
@@ -42,7 +42,7 @@ export default function NewTransactionPage() {
       <main className="flex w-full max-w-2xl flex-col gap-8 px-8 py-16">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/transactions")}
             className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             ← Back

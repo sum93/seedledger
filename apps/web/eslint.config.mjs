@@ -20,6 +20,7 @@ const eslintConfig = defineConfig([
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
     languageOptions: {
       parserOptions: {
+        project: "./tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
       },
     },
