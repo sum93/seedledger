@@ -4,9 +4,11 @@ import { queryClient, trpc } from "@/lib/trpc";
 import { useTransactionForm } from "@/hooks/useTransactionForm";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function NewTransactionPage() {
   const router = useRouter();
+  const [serverError, setServerError] = useState<string>("");
   const {
     formData,
     errors,
@@ -29,11 +31,27 @@ export default function NewTransactionPage() {
         });
         router.push("/transactions");
       },
+      onError: (error) => {
+        // Check if it's a validation error (BAD_REQUEST)
+        if (error.data?.code === "BAD_REQUEST") {
+          setServerError(
+            "Validation failed. Please check your inputs and try again.",
+          );
+        } else {
+          // Server or network error
+          setServerError(
+            error.message || "Failed to add transaction. Please try again.",
+          );
+        }
+      },
     }),
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Clear previous server error
+    setServerError("");
 
     const validation = validateForm();
     if (!validation.isValid) {
@@ -178,10 +196,10 @@ export default function NewTransactionPage() {
               />
             </div>
 
-            {/* Error message */}
-            {addTransactionMutation.isError && (
+            {/* Server Error message */}
+            {serverError && (
               <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-950 dark:text-red-300">
-                Error adding transaction. Please try again.
+                {serverError}
               </div>
             )}
 

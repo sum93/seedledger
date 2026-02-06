@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions,
@@ -54,13 +54,22 @@ const createTransactionsRouter = (db: FastifyInstance["db"]) =>
     addTransaction: t.procedure
       .input(validationSchema.transactionInsertSchema)
       .mutation((opts) => {
-        const result = db
-          .insert(dbSchema.transactionSchema)
-          .values(opts.input)
-          .returning()
-          .get();
+        try {
+          const result = db
+            .insert(dbSchema.transactionSchema)
+            .values(opts.input)
+            .returning()
+            .get();
 
-        return result;
+          return result;
+        } catch (error) {
+          console.error("Database error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to add transaction. Please try again.",
+            cause: error,
+          });
+        }
       }),
 
     updateTransaction: t.procedure
