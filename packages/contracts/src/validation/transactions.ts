@@ -12,7 +12,13 @@ const getOptionalTypeSchema = () => typeSchema.optional();
 const getAmountSchema = (schema: z.ZodNumber) => schema.gte(0);
 const getOptionalAmountSchema = (schema: z.ZodNumber) =>
   getAmountSchema(schema).optional();
-const getOptionalDateSchema = (schema: z.ZodDate) => schema.optional();
+const getOptionalDateSchema = (schema: z.ZodDate) =>
+  z.preprocess((arg) => {
+    if (typeof arg === "string" || typeof arg === "number") {
+      return new Date(arg);
+    }
+    return arg;
+  }, schema).optional();
 
 export const transactionSelectSchema = createSelectSchema(
   schema.transactionSchema,

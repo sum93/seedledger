@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "@/lib/trpc";
+import { queryClient, trpc } from "@/lib/trpc";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,7 +17,11 @@ export default function NewTransactionPage() {
 
   const addTransactionMutation = useMutation(
     trpc.addTransaction.mutationOptions({
-      onSuccess: () => {
+      onSuccess: async () => {
+        // Invalidate and refetch transactions query
+        await queryClient.invalidateQueries({
+          queryKey: trpc.getTransactions.queryKey(),
+        });
         router.push("/transactions");
       },
     }),
@@ -185,7 +189,7 @@ export default function NewTransactionPage() {
               </button>
               <button
                 type="button"
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/transactions")}
                 className="rounded-lg border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-900"
               >
                 Cancel

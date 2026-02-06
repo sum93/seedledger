@@ -25,6 +25,11 @@ export async function POST(
   const { trpcFunc } = await ctx.params;
 
   const proxyURL = new URL(`trpc/${trpcFunc}`, "http://localhost:3003");
+  // Copy query parameters
+  request.nextUrl.searchParams.forEach((value, key) => {
+    proxyURL.searchParams.set(key, value);
+  });
+
   const proxyRequest = new Request(proxyURL, request);
 
   try {

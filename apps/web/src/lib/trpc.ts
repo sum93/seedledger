@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, httpLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 
 import type { TransactionsRouter } from "transactions/types";
@@ -7,7 +7,7 @@ import type { TransactionsRouter } from "transactions/types";
 export const queryClient = new QueryClient();
 
 const trpcClient = createTRPCClient<TransactionsRouter>({
-  links: [httpBatchLink({ url: "/api/transactions" })],
+  links: [httpLink({ url: "/api/transactions" })],
 });
 
 export const trpc = createTRPCOptionsProxy<TransactionsRouter>({

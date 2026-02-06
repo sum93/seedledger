@@ -17,7 +17,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    files: ["**/*.{ts,tsx,mts,cts}"],
     languageOptions: {
       parserOptions: {
         project: "./tsconfig.json",
