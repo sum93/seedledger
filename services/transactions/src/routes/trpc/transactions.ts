@@ -17,7 +17,10 @@ export default fp(async function (fastify) {
       router: createTransactionsRouter(fastify.db),
       onError({ path, error }) {
         // report to error monitoring
-        console.error(`Error in tRPC handler on path '${path}':`, error);
+        // Only log in non-test environments to avoid cluttering test output
+        if (process.env.NODE_ENV !== "test") {
+          console.error(`Error in tRPC handler on path '${path}':`, error);
+        }
       },
     } satisfies FastifyTRPCPluginOptions<TransactionsRouter>["trpcOptions"],
   });

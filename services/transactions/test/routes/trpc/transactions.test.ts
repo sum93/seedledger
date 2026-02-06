@@ -71,6 +71,82 @@ describe("/trpc", () => {
         category: "entertainment",
       });
     });
+
+    test("should reject negative amounts", async ({ app }) => {
+      const transaction = {
+        amount: -100,
+        type: "outflow",
+        description: "Invalid negative amount",
+        category: "test",
+      };
+
+      const res = await app.inject({
+        method: "POST",
+        url: "/trpc/addTransaction",
+        payload: transaction,
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = JSON.parse(res.body);
+      expect(body.error.message).toContain("too_small");
+    });
+
+    test("should reject invalid type", async ({ app }) => {
+      const transaction = {
+        amount: 100,
+        type: "invalid-type",
+        description: "Invalid type",
+        category: "test",
+      };
+
+      const res = await app.inject({
+        method: "POST",
+        url: "/trpc/addTransaction",
+        payload: transaction,
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = JSON.parse(res.body);
+      expect(body.error.message).toContain("invalid_value");
+    });
+
+    test("should reject malformed decimal string amounts", async ({ app }) => {
+      const transaction = {
+        amount: "abc123",
+        type: "inflow",
+        description: "Malformed amount",
+        category: "test",
+      };
+
+      const res = await app.inject({
+        method: "POST",
+        url: "/trpc/addTransaction",
+        payload: transaction,
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = JSON.parse(res.body);
+      expect(body.error.message).toContain("invalid_type");
+    });
+
+    test("should reject missing required fields", async ({ app }) => {
+      const transaction = {
+        amount: 100,
+        // Missing type
+        description: "Missing type field",
+        category: "test",
+      };
+
+      const res = await app.inject({
+        method: "POST",
+        url: "/trpc/addTransaction",
+        payload: transaction,
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = JSON.parse(res.body);
+      expect(body.error.message).toContain("invalid_value");
+    });
   });
 
   describe("/updateTransaction", () => {
