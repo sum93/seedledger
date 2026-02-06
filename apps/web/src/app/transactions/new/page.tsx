@@ -1,24 +1,29 @@
 "use client";
 
 import { queryClient, trpc } from "@/lib/trpc";
+import { useTransactionForm } from "@/hooks/useTransactionForm";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function NewTransactionPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    type: "inflow" as "inflow" | "outflow",
-    amount: "",
-    date: new Date().toISOString().split("T")[0],
-    category: "",
-    description: "",
-  });
+  const {
+    formData,
+    errors,
+    handleAmountChange,
+    handleAmountBlur,
+    handleCategoryChange,
+    handleCategoryBlur,
+    handleTypeChange,
+    handleDateChange,
+    handleDescriptionChange,
+    validateForm,
+    clearErrors,
+  } = useTransactionForm();
 
   const addTransactionMutation = useMutation(
     trpc.addTransaction.mutationOptions({
       onSuccess: async () => {
-        // Invalidate and refetch transactions query
         await queryClient.invalidateQueries({
           queryKey: trpc.getTransactions.queryKey(),
         });
@@ -30,15 +35,13 @@ export default function NewTransactionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const transactionData = {
-      type: formData.type,
-      amount: parseFloat(formData.amount),
-      date: new Date(formData.date),
-      category: formData.category || null,
-      description: formData.description || null,
-    };
+    const validation = validateForm();
+    if (!validation.isValid) {
+      return;
+    }
 
-    addTransactionMutation.mutate(transactionData);
+    clearErrors();
+    addTransactionMutation.mutate(validation.data);
   };
 
   return (
@@ -72,12 +75,7 @@ export default function NewTransactionPage() {
               <select
                 id="type"
                 value={formData.type}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    type: e.target.value as "inflow" | "outflow",
-                  })
-                }
+                onChange={handleTypeChange}
                 className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
                 required
               >
@@ -96,17 +94,23 @@ export default function NewTransactionPage() {
               </label>
               <input
                 id="amount"
-                type="number"
-                step="0.01"
-                min="0"
+                type="text"
                 value={formData.amount}
-                onChange={(e) =>
-                  setFormData({ ...formData, amount: e.target.value })
-                }
-                className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
-                placeholder="0.00"
+                onChange={handleAmountChange}
+                onBlur={handleAmountBlur}
+                className={`rounded-lg border px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:text-zinc-100 ${
+                  errors.amount
+                    ? "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-950"
+                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+                }`}
+                placeholder="0"
                 required
               />
+              {errors.amount && (
+                <span className="text-sm text-red-600 dark:text-red-400">
+                  {errors.amount}
+                </span>
+              )}
             </div>
 
             {/* Date */}
@@ -121,9 +125,7 @@ export default function NewTransactionPage() {
                 id="date"
                 type="date"
                 value={formData.date}
-                onChange={(e) =>
-                  setFormData({ ...formData, date: e.target.value })
-                }
+                onChange={handleDateChange}
                 className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
                 required
               />
@@ -135,18 +137,27 @@ export default function NewTransactionPage() {
                 htmlFor="category"
                 className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
               >
-                Category (optional)
+                Category
               </label>
               <input
                 id="category"
+                required
                 type="text"
                 value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
-                className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                onChange={handleCategoryChange}
+                onBlur={handleCategoryBlur}
+                className={`rounded-lg border px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:text-zinc-100 ${
+                  errors.category
+                    ? "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-950"
+                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+                }`}
                 placeholder="e.g., Groceries, Salary"
               />
+              {errors.category && (
+                <span className="text-sm text-red-600 dark:text-red-400">
+                  {errors.category}
+                </span>
+              )}
             </div>
 
             {/* Description */}
@@ -160,9 +171,7 @@ export default function NewTransactionPage() {
               <textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={handleDescriptionChange}
                 className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
                 placeholder="Add details about this transaction"
                 rows={3}
